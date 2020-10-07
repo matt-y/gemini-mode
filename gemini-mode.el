@@ -44,7 +44,7 @@ with a single space."
     s))
 
 (defun gemini--ensure-blank-line-before-point ()
-  "Ensures an empty line preceeds the point. Does not preserve
+  "Ensure an empty line preceeds the point. Does not preserve
 point. Intended to create space between existing lines and
 something that is being inserted. The point is not preserved here
 because this is intended to preceed the insertion of some text."
@@ -57,7 +57,7 @@ because this is intended to preceed the insertion of some text."
     (newline)))
 
 (defun gemini--ensure-blank-line-after-point ()
-  "Ensures a blank line follows point. Preserves point.
+  "Ensure a blank line follows point. Preserves point.
 Intended to 'push' any non-blank-lines 'downwards' after the
 insertion of something to ensure space between what was just
 inserted and the lines of text that follow what was inserted. The
@@ -123,7 +123,7 @@ point moved to the relevant position. Trying to insert a heading
 when the point is on a line of an existing section title will
 move the point to pthe end of the heading.
 
-headings will always be followed by a newline, one will be
+Headings will always be followed by a newline, one will be
 inserted if the heading inserted is not already followed by a
 newline. if the preceeding line is not empty, a newline will also
 be inserted above the heading."

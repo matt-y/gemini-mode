@@ -20,8 +20,7 @@
   "Major mode for Gemini files.")
 
 (add-to-list 'auto-mode-alist
-             '("\\.\\(?:gemini\\)" . gemini-mode))
-
+             '("\\.\\(?:gemini\\|\\(?:gmi\\)\\)" . gemini-mode))
 
 (provide 'gemini-mode)
 

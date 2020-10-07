@@ -32,6 +32,11 @@ Capture group layout:
 
 ;;; Helper functions and macros
 
+(defun gemini--compress-whitespace (s)
+  "Replace multiple instances of tabs, spaces, or newlines in S
+with a single space."
+  (replace-regexp-in-string "[ \t\n]+" " " s))
+
 (defun gemini--s-trim-right (s)
   "Remove whitespace at the end of S."
   (if (string-match "[ \t\n\r]+\\'" s)
@@ -137,7 +142,9 @@ be inserted above the heading."
       (setq text (delete-and-extract-region
                   (line-beginning-position) (line-end-position))))
     (let* ((header-markup (make-string level ?#))
-           (header-text (concat header-markup " " text)))
+           ;; Ensure that text doesn't contain wacky whitespace
+           (whitespace-compressed-text (gemini--compress-whitespace text))
+           (header-text (concat header-markup " " whitespace-compressed-text)))
       (gemini--insert-with-blank-lines-surrounding header-text))))
 
 ;;; Removals

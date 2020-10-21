@@ -1,5 +1,5 @@
 ;;; gemini-mode.el --- Major mode for working with gemini protocol files
-
+;;; Version: 0.0.1
 ;;; Commentary:
 ;;; soon
 
@@ -9,7 +9,7 @@
 
 ;;; Constants
 
-(defconst gemini-mode-version "0.0.1-dev"
+(defconst gemini-mode-version "0.0.1"
   "The version number for Gemini mode.")
 
 ;;; Regular Expressions

@@ -1,4 +1,4 @@
-;;; gemini-mode.el --- Major mode for working with gemini protocol files
+;;; gemini-mode.el --- Major mode for working with gemini protocol files -*- lexical-binding: t; -*-
 ;;; Version: 0.0.1
 ;;; Commentary:
 ;;; soon
@@ -82,6 +82,10 @@ Internally the function relies on the match groups defined by
 `gemini--regex-header'."
   (save-excursion
     (goto-char (or p (point)))
+    ;; If the point is inside a heading - move it to the end of the
+    ;; heading, and continue as normal
+    (if (thing-at-point-looking-at gemini--regex-header)
+	(move-end-of-line nil))
     ;; The level defaults to 1; if no match is found, the point is at
     ;; "top level".
     (let ((level 1))

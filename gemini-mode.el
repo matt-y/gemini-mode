@@ -173,6 +173,17 @@ text into regular text."
   (interactive)
   (message "gemini-mode version %s" gemini-mode-version))
 
+(defconst gemini-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-h") 'gemini-insert-header-auto)
+    map))
+
+(easy-menu-define gemini-mode-menu gemini-mode-map
+  "Menu for gemini-mode interactive actions"
+  '("Gemini"
+    ("Insert"
+     ["Heading Auto" gemini-insert-header-auto])))
+
 (define-derived-mode gemini-mode text-mode "Gemini"
   "Major mode for Gemini files.")
 

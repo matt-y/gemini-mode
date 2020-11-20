@@ -1,4 +1,4 @@
-;;; gemini-mode--regex-tests.el
+;;; gemini-mode--regex-tests.el -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

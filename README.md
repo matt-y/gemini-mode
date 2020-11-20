@@ -3,7 +3,22 @@
 Emacs major mode for working with the [text/gemini file
 type](https://gemini.circumlunar.space/docs/specification.html).
 
-This is still in major development, and is not feature complete.
+This is still in major development, and is not nearly feature
+complete. This started as a way to learn a bit more about emacs and
+practice some elisp. If we get a fun mode out of it, all the better.
+
+## Roadmap 
+
+The immediate roadmap of things that are yet to be done is below. Font
+lock/syntax highlighting for these various things is also something that
+will be added incrementally throughout - once I figure out how it works,
+at least.
+
+- Header subtree promotion/demotion
+- Link lines 
+- Preformatted text blocks 
+- Unordered lists 
+- Quote lines 
 
 ## "Quick" start 
 

@@ -1,7 +1,9 @@
 ;;; gemini-mode.el --- Major mode for working with gemini protocol files -*- lexical-binding: t; -*-
 ;;; Version: 0.0.1
+
 ;;; Commentary:
-;;; soon
+
+;; Provides facilities for editing text/gemini files. 
 
 ;;; Code:
 
@@ -26,9 +28,6 @@ Capture group layout:
 (defconst gemini--regex-blank-line
   "\n\\s-*\n"
   "Regular expression for a blank line.")
-
-;;; Syntax
-
 
 ;;; Helper functions and macros
 
@@ -166,12 +165,12 @@ text into regular text."
       ;; is on
       (replace-match "" t t nil 1))))
 
-;;; Mode Definition
-
 (defun gemini-mode-show-version ()
   "Output version number in minibuffer."
   (interactive)
   (message "gemini-mode version %s" gemini-mode-version))
+
+;;; mode-map and mode-menu 
 
 (defconst gemini-mode-map
   (let ((map (make-sparse-keymap)))
@@ -183,6 +182,8 @@ text into regular text."
   '("Gemini"
     ("Insert"
      ["Heading Auto" gemini-insert-header-auto])))
+
+;;; Mode Definition
 
 (define-derived-mode gemini-mode text-mode "Gemini"
   "Major mode for Gemini files.")

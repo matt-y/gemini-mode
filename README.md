@@ -43,6 +43,54 @@ above snippet with the location of the cloned `gemini-mode` repository.
 After this initial set up, any files with a `.gemini` or `.gmi`
 extensions will enjoy the `gemini-mode` major mode automatically.
 
+## Using `gemini-mode` 
+
+### Heading Lines 
+
+Heading lines are the bread-and-butter of any gemini file. `gemini-mode`
+allows you to insert them in a manner that will "match" your current
+heading level, or at a specific markup level. 
+
+The text of the heading is provided by multiple means. 
+
+If an active region exists, the text from the region will be used as
+heading text. If no active region exists, but the point is on a line
+that is not a heading, that line is used as the heading text. An active
+region can span multiple lines, the whitespace will be "collapsed" so
+that the heading will be a single "line".
+
+Inserting a heading over an existing heading will be a no-op unless
+you're commanding the level to change. Very bossy!
+
+Inserting a heading on a blank lines will cause only heading markup to
+be inserted and the point moved to a place where you can start
+typing. Trying to insert a heading when the point is on a line of an
+existing section title will move the point to the end of the heading.
+
+Headings will always be followed by a newline, and one will mercifullybe
+inserted if the heading you are creating is not already followed by a
+newline. If the preceeding line is not empty, a newline will _also_ be
+inserted above the heading. 
+
+Both the "auto" and "specific level" heading insertion functions follow
+the above "algorithm".
+
+#### Matching the current heading level 
+
+- **C-c g h** will insert a heading that automatically detects the level
+of the heading that preceeds it. This functionality is provided through
+the `gemini-insert-heading-auto` function.
+
+#### Inserting a heading at a specific level
+
+- **C-c g M-h 1** Inserts a level one heading; functionality provided
+  through the `gemini-insert-heading-level-1` function
+- **C-c g M-h 2** Inserts a level two heading; functionality provided
+  through the `gemini-insert-heading-level-2` function
+- **C-c g M-h 3** Inserts a level three heading; functionality provided
+  through the `gemini-insert-heading-level-3` function
+
+
 ## Development 
 
 Hacking on `gemini-mode` is /relatively/ easy!

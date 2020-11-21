@@ -1,5 +1,5 @@
 ;;; gemini-mode.el --- Major mode for working with gemini protocol files -*- lexical-binding: t; -*-
-;;; Version: 0.0.1
+;;; Version: 0.1.0
 
 ;;; Commentary:
 
@@ -11,13 +11,13 @@
 
 ;;; Constants
 
-(defconst gemini-mode-version "0.0.1"
+(defconst gemini-mode-version "0.1.0"
   "The version number for Gemini mode.")
 
 ;;; Regular Expressions
 
 (defconst gemini--regex-header
-  "^\\(?1:#+[ \t]+\\)\\(?2:.*?\\)\\(?3:[ \t]*\\)$"
+  "^\\(?1:#\\{1,3\\}[ \t]+\\)\\(?2:.*?\\)\\(?3:[ \t]*\\)$"
   "Regular expression for a Section Title (Heading).
 
 Capture group layout:
@@ -108,6 +108,57 @@ after the inserted text."
   (insert text)
   (gemini--ensure-blank-line-after-point))
 
+(defun gemini--insert-header (level)
+  "Internal use method shared between
+  `gemini-insert-header-level-1' and family as well as
+  `gemini-insert-header-auto'.
+
+Insertion behavior is documented in `gemini-insert-header-auto',
+except the level of the section heading is provided by LEVEL."
+  (unless (or (= level 1) (= level 2) (= level 3))
+    (error "LEVEL must be 1, 2, or 3"))
+  (let ((text ""))
+    (if (use-region-p)
+        ;; Use the active region contents if available
+        (setq text (delete-and-extract-region (region-beginning) (region-end)))
+
+      ;; If the active region is not available, and the point is on a header,
+      ;; unwrap it before trying to use the whole line as header text.
+      (when (thing-at-point-looking-at gemini--regex-header)
+        (gemini-unwrap-header-at-point))
+      ;; Use the whole line as header text
+      (setq text (delete-and-extract-region
+                  (line-beginning-position) (line-end-position))))
+    (let* ((header-markup (make-string level ?#))
+           ;; Ensure that text doesn't contain wacky whitespace
+           (whitespace-compressed-text (gemini--compress-whitespace text))
+           (header-text (concat header-markup " " whitespace-compressed-text)))
+      (gemini--insert-with-blank-lines-surrounding header-text))))
+
+(defun gemini-insert-header-level-1 ()
+  "Inserts a level one section title. Does not preserve point.
+
+Behaves the similar to `gemini-insert-header-auto' except the header
+level is explicitly 1, and not determined dynamically."
+  (interactive "*")
+  (gemini--insert-header 1))
+
+(defun gemini-insert-header-level-2 ()
+  "Inserts a level one section title. Does not preserve point.
+
+Behaves the similar to `gemini-insert-header-auto' except the header
+level is explicitly 2, and not determined dynamically."
+  (interactive "*")
+  (gemini--insert-header 2))
+
+(defun gemini-insert-header-level-3 ()
+  "Inserts a level one section title. Does not preserve point.
+
+Behaves the similar to `gemini-insert-header-auto' except the header
+level is explicitly 3, and not determined dynamically."
+  (interactive "*")
+  (gemini--insert-header 3))
+
 (defun gemini-insert-header-auto ()
   "Insert a setion title. Does not preserve point.
 
@@ -131,24 +182,8 @@ inserted if the heading inserted is not already followed by a
 newline. if the preceeding line is not empty, a newline will also
 be inserted above the heading."
   (interactive "*")
-  (let ((level (gemini-header-level-at-point))
-        (text ""))
-    (if (use-region-p)
-        ;; Use the active region contents if available
-        (setq text (delete-and-extract-region (region-beginning) (region-end)))
-
-      ;; If the active region is not available, and the point is on a header,
-      ;; unwrap it before trying to use the whole line as header text.
-      (when (thing-at-point-looking-at gemini--regex-header)
-        (gemini-unwrap-header-at-point))
-      ;; Use the whole line as header text
-      (setq text (delete-and-extract-region
-                  (line-beginning-position) (line-end-position))))
-    (let* ((header-markup (make-string level ?#))
-           ;; Ensure that text doesn't contain wacky whitespace
-           (whitespace-compressed-text (gemini--compress-whitespace text))
-           (header-text (concat header-markup " " whitespace-compressed-text)))
-      (gemini--insert-with-blank-lines-surrounding header-text))))
+  (let ((level (gemini-header-level-at-point)))
+    (gemini--insert-header level)))
 
 ;;; Removals
 
@@ -174,14 +209,20 @@ text into regular text."
 
 (defconst gemini-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-h") 'gemini-insert-header-auto)
+    (define-key map (kbd "C-c g h") 'gemini-insert-header-auto)
+    (define-key map (kbd "C-c g M-h 1") 'gemini-insert-header-level-1)
+    (define-key map (kbd "C-c g M-h 2") 'gemini-insert-header-level-2)
+    (define-key map (kbd "C-c g M-h 3") 'gemini-insert-header-level-3)
     map))
 
 (easy-menu-define gemini-mode-menu gemini-mode-map
   "Menu for gemini-mode interactive actions"
   '("Gemini"
     ("Insert"
-     ["Heading Auto" gemini-insert-header-auto])))
+     ["Heading Auto" gemini-insert-header-auto]
+     ["Heading level 1" gemini-insert-header-level-1]
+     ["Heading level 2" gemini-insert-header-level-2]
+     ["Heading level 3" gemini-insert-header-level-3])))
 
 ;;; Mode Definition
 
